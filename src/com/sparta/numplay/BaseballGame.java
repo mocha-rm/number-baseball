@@ -67,7 +67,11 @@ public class BaseballGame {
             if (input.equals(answerNumber)) {
                 // 정답여부 확인, 만약 정답이면 반복문 탈출 = 종료
                 gameCount++;
+                gameHistory.put(gameCount, tryCount);
+
+                tryCount = 0;
                 System.out.println("정답 !");
+
                 break;
             } else {
                 //힌트 출력
@@ -123,7 +127,8 @@ public class BaseballGame {
         }
     }
 
-    private void clear() {
+    private void  clear() {
+        //스트라이크, 볼 개수 초기화
         strikeCount = 0;
         ballCount = 0;
     }
@@ -137,6 +142,7 @@ public class BaseballGame {
     }
 
     public void clearGameHistory() {
+        gameCount = 0;
         gameHistory.clear();
     }
 }

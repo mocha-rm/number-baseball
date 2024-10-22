@@ -30,8 +30,8 @@ public class Main {
                     BaseballGameDisplay.displayHistory(baseballGame.getGameHistoryMap());
                 }
                 case 3 -> {
-                    //히스토리 클리어
-                    baseballGame.clearGameHistory();
+                    //게임 종료
+                    baseballGame.clearGameHistory(); //히스토리 클리어
                     System.out.println("게임을 종료합니다.");
                     return;
                 }

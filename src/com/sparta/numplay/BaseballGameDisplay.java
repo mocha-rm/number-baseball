@@ -18,6 +18,7 @@ public class BaseballGameDisplay {
     }
 
     public static void displayHistory(HashMap<Integer, Integer> historyMap) {
-
+        System.out.println("\n게임 기록");
+        historyMap.forEach((gameCount, tryCount) -> System.out.println(gameCount + "게임" + " : " + "시도 횟수 - " + tryCount));
     }
 }
