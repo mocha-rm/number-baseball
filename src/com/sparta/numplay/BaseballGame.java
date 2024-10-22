@@ -1,6 +1,5 @@
 package com.sparta.numplay;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -8,13 +7,18 @@ import java.util.stream.Collectors;
 
 public class BaseballGame {
 
+    //생성자에서 정답숫자 생성
     public BaseballGame() {
         createRandomNumber();
     }
 
     int numberArrange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
+
     String answerNumber = ""; // 정답 숫자
     int gameCount = 0;
+
+    int strikeCount = 0;
+    int ballCount = 0;
 
     //랜덤한 숫자 생성 (0, 동일한 숫자 사용 불가
     HashSet<Integer> randomSet = new HashSet<>();
@@ -27,16 +31,10 @@ public class BaseballGame {
             randomSet.add(rand);
         }
 
-        answerNumber = randomSet.stream().map(String::valueOf).collect(Collectors.joining());
-        System.out.println(answerNumber);//테스트용
+        answerNumber = "456";//randomSet.stream().map(String::valueOf).collect(Collectors.joining());
+        System.out.println(answerNumber);//TODO : 테스트 후에 제거 하기
     }
 
-
-    //숫자를 입력하기
-    //서로 다른 3자리 수를 입력할 수 있다.
-    //동일한 숫자는 사용될 수 없다. 즉, 숫자는 중복되지 않아야 한다.
-    //숫자만 입력 가능하며, 문자는 작성할 수 없다.
-    //0은 입력받을 수 없다.
     public int play() {
 
         Scanner sc = new Scanner(System.in);
@@ -61,25 +59,24 @@ public class BaseballGame {
             }
 
             if (input.equals(answerNumber)) {
-                // 정답여부 확인, 만약 정답이면 탈출
+                // 정답여부 확인, 만약 정답이면 반복문 탈출 = 종료
                 System.out.println("정답 !");
                 break;
             } else {
-                // 스트라이크 갯수 계산
-                // 볼 갯수 계산
                 //힌트 출력
-                BaseballGameDisplay.displayHint(countStrike(input), countBall(input));
+                grading(input);
+                BaseballGameDisplay.displayHint(strikeCount, ballCount);
+                clear();
             }
-
         }
 
-        return gameCount;
+        return gameCount; //플레이 횟수를 리턴
     }
 
     private boolean validateInput(String input) throws BaseballInputException {
         //자릿수를 초과할 시
-        if (input.length() > numberArrange) {
-            throw new BaseballInputException("숫자가 범위를 초과하였습니다\n" + numberArrange + "자리수 숫자를 입력해주세요.");
+        if (input.length() > numberArrange || input.length() < numberArrange) {
+            throw new BaseballInputException(numberArrange + "자리수 숫자를 입력해주세요.");
         }
 
         //0을 입력했을 시
@@ -91,27 +88,42 @@ public class BaseballGame {
         HashSet<Character> uniqueChars = new HashSet<>();
         for (char c : input.toCharArray()) {
 
-           if (!uniqueChars.add(c)) { //요소를 셋에 추가할 수 없으면 , 즉 중복된 요소이면 예외 발생 -> add() 는 요소를 저장할 뿐만 아니라 boolean 타입을 반환한다.
-               throw new BaseballInputException("같은 숫자가 중복되었습니다.\n중복되지 않는 숫자를 입력해주세요.");
-           }
+            if (!uniqueChars.add(c)) { //요소를 셋에 추가할 수 없으면 , 즉 중복된 요소이면 예외 발생 -> add() 는 요소를 저장할 뿐만 아니라 boolean 타입을 반환한다.
+                throw new BaseballInputException("같은 숫자가 중복되었습니다.\n중복되지 않는 숫자를 입력해주세요.");
+            }
         }
 
         return true;
     }
 
-    private int countStrike(String input) {
-        //다 입력하면 정답과 비교해서 스트라이크의 갯수 리턴해주기
-        //스트라이크 -> 숫자일치, 위치일치
-        return 1;
+
+    private void grading(String input) {
+
+        String[] answerLetters = answerNumber.split(""); // 정답 숫자를 자릿수 별로 나눠서 배열에 담기
+        String[] inputLetters = input.split(""); // input 을 자릿수 별로 나눠서 배열에 담기
+
+        for (int i = 0; i < inputLetters.length; i++) {
+            if (inputLetters[i].equals(answerLetters[i])) {
+                strikeCount++;
+            } else {
+                ballCheck(inputLetters[i]);
+            }
+        }
     }
 
-    private int countBall(String input) {
-        //다 입력하면 정답과 비교해서 볼의 갯수 리턴해주기
-        //볼 -> 숫자일치, 위치 불일치
-        return 1;
+    private void ballCheck(String inputLetter) {
+        //숫자는 맞지만 위치는 맞지 않을 경우
+        if (answerNumber.contains(inputLetter)) { //정답에 유저가 입력한 값이 존재하는지 확인
+            ballCount++;
+        }
     }
 
     public void setDifficulty(int difficulty) {
         this.numberArrange = difficulty;
+    }
+
+    public void clear() {
+        strikeCount = 0;
+        ballCount = 0;
     }
 }
