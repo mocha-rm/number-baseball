@@ -62,7 +62,7 @@ public class BaseballGame {
                 break;
             } else {
                 //힌트 출력
-                grading(input);
+                answerChecking(input);
                 BaseballGameDisplay.displayHint(strikeCount, ballCount);
                 clear();
             }
@@ -113,8 +113,7 @@ public class BaseballGame {
         return true;
     }
 
-    private void grading(String input) {
-
+    private void answerChecking(String input) {
         String[] answerLetters = answerNumber.split(""); // 정답 숫자를 자릿수 별로 나눠서 배열에 담기
         String[] inputLetters = input.split(""); // input 을 자릿수 별로 나눠서 배열에 담기
 
