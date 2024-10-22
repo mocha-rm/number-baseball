@@ -12,8 +12,8 @@ public class BaseballGame {
         System.out.println("숫자 야구 게임을 시작합니다 !");
     }
 
-    //TODO: 난이도 설정 로직 구현
-    private int numberRange = 0; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
+
+    private int numberRange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
     private HashSet<Integer> randomSet = new HashSet<>();
     private String answerNumber = ""; // 정답 숫자
 
@@ -81,13 +81,13 @@ public class BaseballGame {
             answerNumber += String.valueOf(num) ;
         }
         */
+
         //stream 을 이용해서도 같은 기능을 구현할 수 있다.
         //String::valueOf -> int 를 String 타입으로 변환
         //collect 는 스트림의 요소들을 수집
         //Collectors.joining()은 스트림의 모든 요소를 하나의 문자열로 연결해 준다.
         answerNumber = randomSet.stream().map(String::valueOf).collect(Collectors.joining());
         randomSet.clear();
-        System.out.println(answerNumber);
     }
 
     private boolean validateInput(String input) throws BaseballInputException {
@@ -149,7 +149,11 @@ public class BaseballGame {
         gameHistory.clear();
     }
 
-    public void setNumberRange(int range) {
+    public void setNumberRange(int range) throws BaseballInputException {
+        if (range < 3 || range > 5) {
+            throw  new BaseballInputException("3 ~ 5 자리 숫자만 가능합니다.");
+        }
+
         this.numberRange = range;
         System.out.println(this.numberRange + "자리수 난이도로 설정되었습니다.");
     }
