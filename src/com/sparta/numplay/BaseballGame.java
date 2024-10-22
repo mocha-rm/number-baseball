@@ -9,38 +9,25 @@ import java.util.stream.Collectors;
 public class BaseballGame {
     //생성자에서 정답숫자 생성
     public BaseballGame() {
-        createRandomNumber();
+        System.out.println("숫자 야구 게임을 시작합니다 !");
     }
 
     //TODO: 난이도 설정 로직 구현
     private int numberArrange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
-
+    private HashSet<Integer> randomSet = new HashSet<>();
     private String answerNumber = ""; // 정답 숫자
 
     private int gameCount = 0; // 게임을 몇번 했는지 담는 변수
     private int tryCount = 0;// 문제를 몇번 시도했는지 담는 변수
     private HashMap<Integer, Integer> gameHistory = new HashMap<>();
 
-
     private int strikeCount = 0;
     private int ballCount = 0;
 
-    //랜덤한 숫자 생성 (0, 동일한 숫자 사용 불가
-    private HashSet<Integer> randomSet = new HashSet<>();
 
-    private void createRandomNumber() {
-
-        while (randomSet.size() != numberArrange) {
-
-            int rand = (int) (Math.random() * 9) + 1;
-            randomSet.add(rand);
-        }
-
-        answerNumber = "456";//randomSet.stream().map(String::valueOf).collect(Collectors.joining());
-        System.out.println(answerNumber);//TODO : 테스트 후에 제거 하기
-    }
 
     public void play() {
+        createRandomNumber();
 
         Scanner sc = new Scanner(System.in);
         String input = "";
@@ -82,6 +69,27 @@ public class BaseballGame {
         }
     }
 
+    //랜덤한 숫자 생성
+    private void createRandomNumber() {
+        while (randomSet.size() != numberArrange) {
+
+            int rand = (int) (Math.random() * 9) + 1;
+            randomSet.add(rand);
+        }
+        /*
+        for (int num : randomSet) {
+            answerNumber += String.valueOf(num) ;
+        }
+        */
+        //stream 을 이용해서도 같은 기능을 구현할 수 있다.
+        //String::valueOf -> int 를 String 타입으로 변환
+        //collect 는 스트림의 요소들을 수집
+        //Collectors.joining()은 스트림의 모든 요소를 하나의 문자열로 연결해 준다.
+        answerNumber = randomSet.stream().map(String::valueOf).collect(Collectors.joining());
+        randomSet.clear();
+        System.out.println(answerNumber);
+    }
+
     private boolean validateInput(String input) throws BaseballInputException {
         //자릿수를 초과할 시
         if (input.length() > numberArrange || input.length() < numberArrange) {
@@ -104,7 +112,6 @@ public class BaseballGame {
 
         return true;
     }
-
 
     private void grading(String input) {
 
@@ -133,10 +140,6 @@ public class BaseballGame {
         ballCount = 0;
     }
 
-    public void setDifficulty(int difficulty) {
-        this.numberArrange = difficulty;
-    }
-
     public HashMap<Integer, Integer> getGameHistoryMap() {
         return gameHistory;
     }
@@ -144,5 +147,9 @@ public class BaseballGame {
     public void clearGameHistory() {
         gameCount = 0;
         gameHistory.clear();
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.numberArrange = difficulty;
     }
 }
