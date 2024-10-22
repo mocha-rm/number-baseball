@@ -1,27 +1,32 @@
 package com.sparta.numplay;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class BaseballGame {
-
     //생성자에서 정답숫자 생성
     public BaseballGame() {
         createRandomNumber();
     }
 
-    int numberArrange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
+    //TODO: 난이도 설정 로직 구현
+    private int numberArrange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
 
-    String answerNumber = ""; // 정답 숫자
-    int gameCount = 0;
+    private String answerNumber = ""; // 정답 숫자
 
-    int strikeCount = 0;
-    int ballCount = 0;
+    private int gameCount = 0; // 게임을 몇번 했는지 담는 변수
+    private int tryCount = 0;// 문제를 몇번 시도했는지 담는 변수
+    private HashMap<Integer, Integer> gameHistory = new HashMap<>();
+
+
+    private int strikeCount = 0;
+    private int ballCount = 0;
 
     //랜덤한 숫자 생성 (0, 동일한 숫자 사용 불가
-    HashSet<Integer> randomSet = new HashSet<>();
+    private HashSet<Integer> randomSet = new HashSet<>();
 
     private void createRandomNumber() {
 
@@ -35,12 +40,13 @@ public class BaseballGame {
         System.out.println(answerNumber);//TODO : 테스트 후에 제거 하기
     }
 
-    public int play() {
+    public void play() {
 
         Scanner sc = new Scanner(System.in);
         String input = "";
+        System.out.println("숫자를 입력하세요.");
+
         while (true) {
-            System.out.println("숫자를 입력하세요.");
             try {
                 input = String.valueOf(sc.nextInt());
             } catch (InputMismatchException e) {
@@ -51,7 +57,7 @@ public class BaseballGame {
 
             try {
                 if (validateInput(input)) { //올바른 입력값을 받았는지 검증
-                    gameCount++; // 게임 진행횟수 증가
+                    tryCount++; // 게임 진행횟수 증가
                 }
             } catch (BaseballInputException e) {
                 System.out.println(e.getMessage());
@@ -60,6 +66,7 @@ public class BaseballGame {
 
             if (input.equals(answerNumber)) {
                 // 정답여부 확인, 만약 정답이면 반복문 탈출 = 종료
+                gameCount++;
                 System.out.println("정답 !");
                 break;
             } else {
@@ -69,8 +76,6 @@ public class BaseballGame {
                 clear();
             }
         }
-
-        return gameCount; //플레이 횟수를 리턴
     }
 
     private boolean validateInput(String input) throws BaseballInputException {
@@ -118,12 +123,20 @@ public class BaseballGame {
         }
     }
 
+    private void clear() {
+        strikeCount = 0;
+        ballCount = 0;
+    }
+
     public void setDifficulty(int difficulty) {
         this.numberArrange = difficulty;
     }
 
-    public void clear() {
-        strikeCount = 0;
-        ballCount = 0;
+    public HashMap<Integer, Integer> getGameHistoryMap() {
+        return gameHistory;
+    }
+
+    public void clearGameHistory() {
+        gameHistory.clear();
     }
 }
