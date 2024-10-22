@@ -13,7 +13,7 @@ public class BaseballGame {
     }
 
     //TODO: 난이도 설정 로직 구현
-    private int numberArrange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
+    private int numberRange = 0; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
     private HashSet<Integer> randomSet = new HashSet<>();
     private String answerNumber = ""; // 정답 숫자
 
@@ -71,7 +71,7 @@ public class BaseballGame {
 
     //랜덤한 숫자 생성
     private void createRandomNumber() {
-        while (randomSet.size() != numberArrange) {
+        while (randomSet.size() != numberRange) {
 
             int rand = (int) (Math.random() * 9) + 1;
             randomSet.add(rand);
@@ -92,8 +92,8 @@ public class BaseballGame {
 
     private boolean validateInput(String input) throws BaseballInputException {
         //자릿수를 초과할 시
-        if (input.length() > numberArrange || input.length() < numberArrange) {
-            throw new BaseballInputException(numberArrange + "자리수 숫자를 입력해주세요.");
+        if (input.length() > numberRange || input.length() < numberRange) {
+            throw new BaseballInputException(numberRange + "자리 숫자를 입력해주세요.");
         }
 
         //0을 입력했을 시
@@ -149,7 +149,8 @@ public class BaseballGame {
         gameHistory.clear();
     }
 
-    public void setDifficulty(int difficulty) {
-        this.numberArrange = difficulty;
+    public void setNumberRange(int range) {
+        this.numberRange = range;
+        System.out.println(this.numberRange + "자리수 난이도로 설정되었습니다.");
     }
 }
