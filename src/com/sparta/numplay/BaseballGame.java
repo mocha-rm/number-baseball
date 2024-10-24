@@ -12,7 +12,6 @@ public class BaseballGame {
         System.out.println("숫자 야구 게임을 시작합니다 !");
     }
 
-
     private int numberRange = 3; //난이도 선택 3 = 3자릿수, 4 = 4자릿수, 5 = 5자릿수
     private HashSet<Integer> randomSet = new HashSet<>();
     private String answerNumber = ""; // 정답 숫자
@@ -23,7 +22,6 @@ public class BaseballGame {
 
     private int strikeCount = 0;
     private int ballCount = 0;
-
 
 
     public void play() {
@@ -56,8 +54,9 @@ public class BaseballGame {
                 gameCount++;
                 gameHistory.put(gameCount, tryCount);
 
-                tryCount = 0;
                 System.out.println("정답 !");
+                System.out.println(tryCount + "만에 클리어 했습니다.");
+                tryCount = 0;
 
                 break;
             } else {
@@ -133,7 +132,7 @@ public class BaseballGame {
         }
     }
 
-    private void  clear() {
+    private void clear() {
         //스트라이크, 볼 개수 초기화
         strikeCount = 0;
         ballCount = 0;
@@ -150,7 +149,7 @@ public class BaseballGame {
 
     public void setNumberRange(int range) throws BaseballInputException {
         if (range < 3 || range > 5) {
-            throw  new BaseballInputException("3 ~ 5 자리 숫자만 가능합니다.");
+            throw new BaseballInputException("3 ~ 5 자리 숫자만 가능합니다.");
         }
 
         this.numberRange = range;
